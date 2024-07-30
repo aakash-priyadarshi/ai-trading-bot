@@ -15,18 +15,27 @@ code {
 
 .container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: flex-start;
   padding: 20px;
+}
+
+.chart-container {
+  flex: 2;
+  margin-right: 20px;
+}
+
+.widgets-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .widget {
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 20px;
-  margin: 10px;
-  width: 80%;
-  max-width: 600px;
+  margin: 10px 0;
   background-color: #f9f9f9;
 }
 
