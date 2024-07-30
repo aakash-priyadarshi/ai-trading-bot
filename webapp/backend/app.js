@@ -1,41 +1,53 @@
-// frontend/src/App.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Chart from 'chart.js/auto';
+const express = require('express');
+const dotenv = require('dotenv');
+const path = require('path');
+const helmet = require('helmet');
+const cors = require('cors');
+const morgan = require('morgan');
+const http = require('http');
+const WebSocket = require('ws');
 
-function App() {
-    const [data, setData] = useState([]);
+dotenv.config();
 
-    useEffect(() => {
-        axios.get('http://localhost:5000/historical/AAPL').then((response) => {
-            setData(response.data);
-        });
-    }, []);
+const app = express();
 
-    useEffect(() => {
-        const ctx = document.getElementById('chart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: data.map((_, index) => index),
-                datasets: [
-                    {
-                        label: 'Stock Price',
-                        data: data.map((d) => d.close),
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                    },
-                ],
-            },
-        });
-    }, [data]);
+app.use(helmet());
+app.use(cors());
+app.use(morgan('combined'));
+app.use(express.json());
 
-    return (
-        <div>
-            <h1>AI Trading Bot</h1>
-            <canvas id="chart" width="400" height="200"></canvas>
-        </div>
-    );
-}
+// Import routes
+const dataRoutes = require('./routes/data');
+app.use('/api/v1/data', dataRoutes);
 
-export default App;
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+// Serve the frontend index.html for any other route
+app.get('*', (req, res, next) => {
+  if (!req.path.startsWith('/api/')) {
+    return res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+  }
+  next(); // Continue to the next middleware if it's an API route
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Client connected');
+  ws.on('message', (message) => {
+    console.log('Received message:', message);
+  });
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
+});
+
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

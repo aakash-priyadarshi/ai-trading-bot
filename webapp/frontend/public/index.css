@@ -1,0 +1,50 @@
+/* index.css */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.widget {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px;
+  width: 80%;
+  max-width: 600px;
+  background-color: #f9f9f9;
+}
+
+.widget h2 {
+  margin-top: 0;
+}
+
+.widget .balance, .widget .tracked-symbols, .widget .recent-activities {
+  margin-bottom: 20px;
+}
+
+.widget .order-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.widget .order-form input, .widget .order-form select, .widget .order-form button {
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 16px;
+}
