@@ -67,88 +67,110 @@ function App() {
     };
   };
 
-  const renderChart = (chartData) => {
-    const ctx = document.getElementById('stockChart').getContext('2d');
+// render chart function start
 
-    if (chartInstanceRef.current) {
-      chartInstanceRef.current.destroy();
+
+
+const renderChart = (chartData) => {
+  if (!chartRef.current) return;
+  const ctx = chartRef.current.getContext('2d');
+
+  if (chartInstanceRef.current) {
+    chartInstanceRef.current.destroy();
+  }
+
+  // Correctly map chart data
+  const mappedData = chartData.map(d => ({
+    x: DateTime.fromISO(d.Timestamp).toMillis(), // Convert to milliseconds
+    o: d.OpenPrice,
+    h: d.HighPrice,
+    l: d.LowPrice,
+    c: d.ClosePrice,
+    v: d.Volume,
+    t: d.TradeCount,
+    vw: d.VWAP
+  }));
+
+  const datasets = [
+    {
+      label: `${symbol} Stock Price`,
+      data: mappedData,
+      borderColor: 'rgba(75,192,192,1)',
+      borderWidth: 1,
+      type: 'candlestick',
+      hidden: chartType !== 'candlestick'
+    },
+    {
+      label: 'Close Price',
+      data: mappedData.map(d => ({
+        x: d.x,
+        y: d.c
+      })),
+      borderColor: 'rgba(255,99,132,1)',
+      borderWidth: 1,
+      type: 'line',
+      hidden: chartType !== 'line'
     }
+  ];
 
-    const datasets = [
-      {
-        label: `${symbol} Stock Price`,
-        data: chartData.map(d => ({
-          x: new Date(d.Timestamp),
-          o: d.OpenPrice,
-          h: d.HighPrice,
-          l: d.LowPrice,
-          c: d.ClosePrice,
-          v: d.Volume,
-          t: d.TradeCount,
-          vw: d.VWAP
-        })),
-        borderColor: 'rgba(75,192,192,1)',
-        borderWidth: 1,
-        type: 'candlestick',
-        hidden: chartType !== 'candlestick'
-      },
-      {
-        label: 'Close Price',
-        data: chartData.map(d => ({
-          x: new Date(d.Timestamp),
-          y: d.ClosePrice
-        })),
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 1,
-        type: 'line',
-        hidden: chartType !== 'line'
-      }
-    ];
-
-    const config = {
-      type: chartType,
-      data: {
-        datasets: datasets
-      },
-      options: {
-        scales: {
-          x: {
-            type: 'time',
-            time: {
-              unit: 'day'
+  const config = {
+    type: chartType === 'candlestick' ? 'candlestick' : 'line', // Set chart type dynamically
+    data: {
+      datasets: datasets
+    },
+    options: {
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            unit: 'minute', // Adjust time unit based on your data granularity
+            tooltipFormat: 'yyyy-MM-dd HH:mm' // Format for the tooltip
+          },
+          adapters: {
+            date: {
+              locale: 'en-US'
             }
           },
-          y: {
-            beginAtZero: false
+          ticks: {
+            source: 'data'
           }
         },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const dataPoint = context.raw;
-                if (context.dataset.type === 'line') {
-                  return `Close: ${dataPoint.y}`;
-                } else {
-                  return [
-                    `Open: ${dataPoint.o}`,
-                    `High: ${dataPoint.h}`,
-                    `Low: ${dataPoint.l}`,
-                    `Close: ${dataPoint.c}`,
-                    `Volume: ${dataPoint.v}`,
-                    `Trade Count: ${dataPoint.t}`,
-                    `VWAP: ${dataPoint.vw}`
-                  ];
-                }
+        y: {
+          beginAtZero: false
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const dataPoint = context.raw;
+              if (context.dataset.type === 'line') {
+                return `Close: ${dataPoint.y}`;
+              } else {
+                return [
+                  `Open: ${dataPoint.o}`,
+                  `High: ${dataPoint.h}`,
+                  `Low: ${dataPoint.l}`,
+                  `Close: ${dataPoint.c}`,
+                  `Volume: ${dataPoint.v}`,
+                  `Trade Count: ${dataPoint.t}`,
+                  `VWAP: ${dataPoint.vw}`
+                ];
               }
             }
           }
         }
       }
-    };
-
-    chartInstanceRef.current = new Chart(ctx, config);
+    }
   };
+
+  chartInstanceRef.current = new Chart(ctx, config);
+};
+
+
+
+
+  // render chart function end.
 
   const handleOrder = (type) => {
     const amount = parseFloat(document.getElementById('amount').value);
