@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import { Chart, registerables } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 import { CandlestickController, CandlestickElement } from 'chartjs-chart-financial';
 import { DateTime } from 'luxon';
 import 'chartjs-adapter-luxon';
 import './index.css';
 
-// Register the candlestick chart type
-Chart.register(CandlestickController, CandlestickElement);
+// Register all necessary Chart.js components, including the time scale
+Chart.register(...registerables, CandlestickController, CandlestickElement, zoomPlugin);
 
 function App() {
   const [symbol, setSymbol] = useState('AAPL');
@@ -23,9 +24,33 @@ function App() {
   useEffect(() => {
     fetchData();
     setupWebSocket();
+
+    // Auto-update data based on timeframe
+    let updateInterval;
+    if (timeframe === '1Min') {
+      updateInterval = setInterval(fetchData, 60000); // 1 minute
+    } else if (timeframe === '5Min') {
+      updateInterval = setInterval(fetchData, 300000); // 5 minutes
+    } else if (timeframe === '15Min') {
+      updateInterval = setInterval(fetchData, 900000); // 15 minutes
+    } else if (timeframe === '30Min') {
+      updateInterval = setInterval(fetchData, 1800000); // 30 minutes
+    } else if (timeframe === '1Hour') {
+      updateInterval = setInterval(fetchData, 3600000); // 1 hour
+    } else if (timeframe === '1Day') {
+      updateInterval = setInterval(fetchData, 86400000); // 1 day
+    }
+
     return () => {
       if (wsRef.current) {
         wsRef.current.close();
+      }
+      if (updateInterval) {
+        clearInterval(updateInterval);
+      }
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
       }
     };
   }, [symbol, timeframe, chartType]);
@@ -56,8 +81,11 @@ function App() {
       const message = JSON.parse(event.data);
       console.log('WebSocket message:', message);
       // Update chart with new data
-      setData((prevData) => [...prevData, message]);
-      renderChart([...data, message]);
+      setData((prevData) => {
+        const newData = [...prevData, message];
+        updateChart(newData);
+        return newData;
+      });
     };
     wsRef.current.onclose = () => {
       console.log('WebSocket disconnected');
@@ -67,110 +95,155 @@ function App() {
     };
   };
 
-// render chart function start
+  const renderChart = (chartData) => {
+    if (!chartRef.current) return;
+    const ctx = chartRef.current.getContext('2d');
 
-
-
-const renderChart = (chartData) => {
-  if (!chartRef.current) return;
-  const ctx = chartRef.current.getContext('2d');
-
-  if (chartInstanceRef.current) {
-    chartInstanceRef.current.destroy();
-  }
-
-  // Correctly map chart data
-  const mappedData = chartData.map(d => ({
-    x: DateTime.fromISO(d.Timestamp).toMillis(), // Convert to milliseconds
-    o: d.OpenPrice,
-    h: d.HighPrice,
-    l: d.LowPrice,
-    c: d.ClosePrice,
-    v: d.Volume,
-    t: d.TradeCount,
-    vw: d.VWAP
-  }));
-
-  const datasets = [
-    {
-      label: `${symbol} Stock Price`,
-      data: mappedData,
-      borderColor: 'rgba(75,192,192,1)',
-      borderWidth: 1,
-      type: 'candlestick',
-      hidden: chartType !== 'candlestick'
-    },
-    {
-      label: 'Close Price',
-      data: mappedData.map(d => ({
-        x: d.x,
-        y: d.c
-      })),
-      borderColor: 'rgba(255,99,132,1)',
-      borderWidth: 1,
-      type: 'line',
-      hidden: chartType !== 'line'
+    // Destroy previous chart instance if it exists
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+      chartInstanceRef.current = null; // Clear the reference to the destroyed chart
     }
-  ];
 
-  const config = {
-    type: chartType === 'candlestick' ? 'candlestick' : 'line', // Set chart type dynamically
-    data: {
-      datasets: datasets
-    },
-    options: {
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-            unit: 'minute', // Adjust time unit based on your data granularity
-            tooltipFormat: 'yyyy-MM-dd HH:mm' // Format for the tooltip
-          },
-          adapters: {
-            date: {
-              locale: 'en-US'
+    // Correctly map chart data
+    const mappedData = chartData.map(d => ({
+      x: DateTime.fromISO(d.Timestamp).toMillis(), // Convert to milliseconds
+      o: d.OpenPrice,
+      h: d.HighPrice,
+      l: d.LowPrice,
+      c: d.ClosePrice,
+      v: d.Volume,
+      t: d.TradeCount,
+      vw: d.VWAP
+    }));
+
+    const datasets = [
+      {
+        label: `${symbol} Stock Price`,
+        data: mappedData,
+        borderColor: 'rgba(75,192,192,1)',
+        borderWidth: 1,
+        type: 'candlestick',
+        hidden: chartType !== 'candlestick'
+      },
+      {
+        label: 'Close Price',
+        data: mappedData.map(d => ({
+          x: d.x,
+          y: d.c
+        })),
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 1,
+        type: 'line',
+        hidden: chartType !== 'line'
+      }
+    ];
+
+    const config = {
+      type: chartType === 'candlestick' ? 'candlestick' : 'line', // Set chart type dynamically
+      data: {
+        datasets: datasets
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'minute', // Adjust time unit based on your data granularity
+              tooltipFormat: 'yyyy-MM-dd HH:mm' // Format for the tooltip
+            },
+            adapters: {
+              date: {
+                locale: 'en-US'
+              }
+            },
+            ticks: {
+              source: 'data'
             }
           },
-          ticks: {
-            source: 'data'
+          y: {
+            beginAtZero: false
           }
         },
-        y: {
-          beginAtZero: false
-        }
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const dataPoint = context.raw;
-              if (context.dataset.type === 'line') {
-                return `Close: ${dataPoint.y}`;
-              } else {
-                return [
-                  `Open: ${dataPoint.o}`,
-                  `High: ${dataPoint.h}`,
-                  `Low: ${dataPoint.l}`,
-                  `Close: ${dataPoint.c}`,
-                  `Volume: ${dataPoint.v}`,
-                  `Trade Count: ${dataPoint.t}`,
-                  `VWAP: ${dataPoint.vw}`
-                ];
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const dataPoint = context.raw;
+                if (context.dataset.type === 'line') {
+                  return `Close: ${dataPoint.y}`;
+                } else {
+                  return [
+                    `Open: ${dataPoint.o}`,
+                    `High: ${dataPoint.h}`,
+                    `Low: ${dataPoint.l}`,
+                    `Close: ${dataPoint.c}`,
+                    `Volume: ${dataPoint.v}`,
+                    `Trade Count: ${dataPoint.t}`,
+                    `VWAP: ${dataPoint.vw}`
+                  ];
+                }
               }
+            }
+          },
+          zoom: {
+            pan: {
+              enabled: true,
+              mode: 'x',
+              speed: 10,
+              threshold: 10,
+            },
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              drag: {
+                enabled: true,
+              },
+              pinch: {
+                enabled: true,
+              },
+              mode: 'x',
+              speed: 0.1,
             }
           }
         }
       }
-    }
+    };
+
+    chartInstanceRef.current = new Chart(ctx, config);
   };
 
-  chartInstanceRef.current = new Chart(ctx, config);
-};
+  const updateChart = (newData) => {
+    if (!chartInstanceRef.current) return;
 
+    // Correctly map new data
+    const mappedData = newData.map(d => ({
+      x: DateTime.fromISO(d.Timestamp).toMillis(), // Convert to milliseconds
+      o: d.OpenPrice,
+      h: d.HighPrice,
+      l: d.LowPrice,
+      c: d.ClosePrice,
+      v: d.Volume,
+      t: d.TradeCount,
+      vw: d.VWAP
+    }));
 
+    const candlestickDataset = chartInstanceRef.current.data.datasets.find(dataset => dataset.type === 'candlestick');
+    const lineDataset = chartInstanceRef.current.data.datasets.find(dataset => dataset.type === 'line');
 
+    if (candlestickDataset) {
+      candlestickDataset.data = mappedData;
+    }
+    if (lineDataset) {
+      lineDataset.data = mappedData.map(d => ({
+        x: d.x,
+        y: d.c
+      }));
+    }
 
-  // render chart function end.
+    chartInstanceRef.current.update();
+  };
 
   const handleOrder = (type) => {
     const amount = parseFloat(document.getElementById('amount').value);
