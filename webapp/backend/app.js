@@ -6,10 +6,19 @@ const cors = require('cors');
 const morgan = require('morgan');
 const http = require('http');
 const WebSocket = require('ws');
+const mongoose = require('mongoose');
+const { fetchMissingHistoricalData } = require('./fetchHistoricalData');
 
 dotenv.config();
 
 const app = express();
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('MongoDB connected');
+    fetchMissingHistoricalData(); // Check and fetch missing historical data on startup
+  })
+  .catch(err => console.error('MongoDB connection error:', err));
 
 app.use(helmet());
 app.use(cors());

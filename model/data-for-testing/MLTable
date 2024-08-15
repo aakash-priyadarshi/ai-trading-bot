@@ -1,0 +1,6 @@
+paths:
+  - file: ./cleaned_new_stock_data_with_indicators.csv
+transformations:
+  - read_delimited:
+      delimiter: ","
+      encoding: "utf-8"
