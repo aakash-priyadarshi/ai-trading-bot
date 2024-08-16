@@ -8,6 +8,9 @@ const http = require('http');
 const WebSocket = require('ws');
 const mongoose = require('mongoose');
 const { fetchMissingHistoricalData } = require('./fetchHistoricalData');
+const cron = require('node-cron');
+const { autoDailyTrade } = require('./services/autoTrader');
+const tradingController = require('./controllers/tradingController');
 
 dotenv.config();
 
@@ -48,6 +51,26 @@ app.use((err, req, res, next) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+// Run auto-trading once a day at 6:00 PM (assuming market closes at 4:00 PM)
+cron.schedule('0 18 * * 1-5', async () => {
+  console.log('Running daily auto-trade routine');
+  const trackedSymbols = ['AAPL', 'AMZN', 'BRK.B', 'GOOGL', 'JNJ', 'JPM', 'META', 'MSFT', 'NVDA', 'TSLA'];
+  for (const symbol of trackedSymbols) {
+    await autoDailyTrade(symbol);
+  }
+});
+
+// Auto-trading cron job
+cron.schedule(tradingController.autoTradingFrequency, tradingController.runAutoTrading);
+
+// New routes
+app.post('/api/v1/trading/toggle', tradingController.toggleAutoTrading);
+app.post('/api/v1/trading/frequency', tradingController.setAutoTradingFrequency);
+app.get('/api/v1/trading/status', tradingController.getAutoTradingStatus);
+app.post('/api/v1/trading/manual', tradingController.manualTrade);
+app.post('/api/v1/trading/predict', tradingController.predictFuturePrices);
+
+//
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('message', (message) => {

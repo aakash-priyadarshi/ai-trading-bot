@@ -19,6 +19,9 @@ function App() {
   const chartRef = useRef(null);
   const wsRef = useRef(null);
   const chartInstanceRef = useRef(null);
+  const [isAutoTradingEnabled, setIsAutoTradingEnabled] = useState(false);
+  const [autoTradingFrequency, setAutoTradingFrequency] = useState('0 18 * * 1-5');
+  const [futurePredictions, setFuturePredictions] = useState({});
 
   const fetchData = useCallback(async () => {
     try {
@@ -261,7 +264,6 @@ function App() {
         break;
     }
     chartInstanceRef.current.zoomScale('x', {min: zoomStart.toMillis(), max: now.toMillis()}, 'default');
-  
   };
 
   const updateChart = (newData) => {
@@ -291,17 +293,76 @@ function App() {
     chartInstanceRef.current.update();
   };
 
-  const handleOrder = (type) => {
+  const handleOrder = async (type) => {
     const amount = parseFloat(document.getElementById('amount').value);
     const price = parseFloat(document.getElementById('price').value);
-    if (type === 'buy') {
-      setBalance(balance - amount * price);
-      setRecentActivities([...recentActivities, { type: 'Buy', symbol, amount, price }]);
-    } else {
-      setBalance(balance + amount * price);
-      setRecentActivities([...recentActivities, { type: 'Sell', symbol, amount, price }]);
+    try {
+      const response = await fetch('/api/v1/trading/manual', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol, action: type, quantity: amount, price })
+      });
+      const data = await response.json();
+      console.log('Manual trade executed:', data);
+      
+      if (type === 'buy') {
+        setBalance(balance - amount * price);
+      } else {
+        setBalance(balance + amount * price);
+      }
+      setRecentActivities([...recentActivities, { type: type === 'buy' ? 'Buy' : 'Sell', symbol, amount, price }]);
+    } catch (error) {
+      console.error('Error executing manual trade:', error);
     }
   };
+
+  const toggleAutoTrading = async () => {
+    try {
+      const response = await fetch('/api/v1/trading/toggle', { method: 'POST' });
+      const data = await response.json();
+      setIsAutoTradingEnabled(data.isAutoTradingEnabled);
+    } catch (error) {
+      console.error('Error toggling auto-trading:', error);
+    }
+  };
+
+  const setFrequency = async (frequency) => {
+    try {
+      const response = await fetch('/api/v1/trading/frequency', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ frequency })
+      });
+      const data = await response.json();
+      setAutoTradingFrequency(data.autoTradingFrequency);
+    } catch (error) {
+      console.error('Error setting auto-trading frequency:', error);
+    }
+  };
+
+  const predictFuturePrices = async (symbol, days) => {
+    try {
+      const response = await fetch('/api/v1/trading/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol, days })
+      });
+      const data = await response.json();
+      setFuturePredictions({ ...futurePredictions, [symbol]: data });
+    } catch (error) {
+      console.error('Error predicting future prices:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch initial auto-trading status and predictions for tracked symbols
+    fetch('/api/v1/trading/status').then(res => res.json()).then(data => {
+      setIsAutoTradingEnabled(data.isAutoTradingEnabled);
+      setAutoTradingFrequency(data.autoTradingFrequency);
+    }).catch(error => console.error('Error fetching auto-trading status:', error));
+
+    trackedSymbols.forEach(symbol => predictFuturePrices(symbol, 30));
+  }, []);
 
   return (
     <div className="App container">
@@ -359,6 +420,41 @@ function App() {
             {recentActivities.map((activity, index) => (
               <div key={index}>
                 {activity.type} {activity.amount} {activity.symbol} at ${activity.price.toFixed(2)}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="widget">
+          <h2>Auto-Trading Controls</h2>
+          <div className="auto-trading-controls">
+            <button onClick={toggleAutoTrading}>
+              {isAutoTradingEnabled ? 'Disable Auto-Trading' : 'Enable Auto-Trading'}
+            </button>
+            <select value={autoTradingFrequency} onChange={(e) => setFrequency(e.target.value)}>
+              <option value="0 18 * * 1-5">Daily at 6 PM</option>
+              <option value="0 */4 * * 1-5">Every 4 hours</option>
+              <option value="0 */1 * * 1-5">Hourly</option>
+            </select>
+          </div>
+        </div>
+        <div className="widget">
+          <h2>Future Price Predictions</h2>
+          <div className="future-predictions">
+            {Object.entries(futurePredictions).map(([sym, predictions]) => (
+              <div key={sym} className="prediction-item">
+                <h3>{sym}</h3>
+                <ul>
+                  {predictions.map((pred, index) => (
+                    <li 
+                      key={index} 
+                      style={{
+                        color: pred.action === 'buy' ? 'green' : pred.action === 'sell' ? 'red' : 'black'
+                      }}
+                    >
+                      {pred.date}: ${pred.predicted_close.toFixed(2)} - {pred.action.toUpperCase()}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
