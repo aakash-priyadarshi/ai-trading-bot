@@ -1,3 +1,4 @@
+// backend/fetchRealTimeData.js:
 const Alpaca = require('@alpacahq/alpaca-trade-api');
 const StockData = require('./models/StockData');
 const { getFormattedSymbol } = require('./symbolFormatter');

@@ -1,3 +1,4 @@
+//backend/fetchHistoricalData.js:
 const yahooFinance = require('yahoo-finance2').default;
 const StockData = require('./models/StockData');
 const { getFormattedSymbol } = require('./symbolFormatter');
