@@ -23,7 +23,7 @@ function App() {
   const chartInstanceRef = useRef(null);
   const [isAutoTradingEnabled, setIsAutoTradingEnabled] = useState(false);
   const [autoTradingFrequency, setAutoTradingFrequency] = useState('0 18 * * 1-5');
-  const [futurePredictions, setFuturePredictions] = useState({});
+//const [futurePredictions, setFuturePredictions] = useState({});
   const [predictions, setPredictions] = useState(null);
   const [predictionWeeks, setPredictionWeeks] = useState(1);
   const [isPredictionLoading, setIsPredictionLoading] = useState(false);
@@ -401,38 +401,38 @@ const handlePrediction = async () => {
     }).catch(error => console.error('Error fetching auto-trading status:', error));
   
     // Fetch future predictions for all tracked symbols
-    const fetchAllFuturePredictions = async () => {
-      setFuturePredictionsError(null);
-      const newPredictions = {};
-      for (const sym of trackedSymbols) {
-        try {
-          const response = await fetch('/api/v1/trading/predict', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              symbol: sym, 
-              current_price: 0,  // You might want to get the actual current price
-              prediction_days: 28 // Always 4 weeks for future predictions
-            })
-          });
-          const data = await response.json();
-          if (data.error) {
-            throw new Error(data.error);
-          }
-          newPredictions[sym] = data.predictions || [];
-        } catch (error) {
-          console.error(`Error fetching future predictions for ${sym}:`, error);
-          newPredictions[sym] = [];
-          setFuturePredictionsError(`Failed to fetch predictions for some symbols. Please try again later.`);
-        }
-      }
-      setFuturePredictions(newPredictions);
-    };
+    // const fetchAllFuturePredictions = async () => {
+    //   setFuturePredictionsError(null);
+    //   const newPredictions = {};
+    //   for (const sym of trackedSymbols) {
+    //     try {
+    //       const response = await fetch('/api/v1/trading/predict', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ 
+    //           symbol: sym, 
+    //           current_price: 0,  // You might want to get the actual current price
+    //           prediction_days: 28 // Always 4 weeks for future predictions
+    //         })
+    //       });
+    //       const data = await response.json();
+    //       if (data.error) {
+    //         throw new Error(data.error);
+    //       }
+    //       newPredictions[sym] = data.predictions || [];
+    //     } catch (error) {
+    //       console.error(`Error fetching future predictions for ${sym}:`, error);
+    //       newPredictions[sym] = [];
+    //       setFuturePredictionsError(`Failed to fetch predictions for some symbols. Please try again later.`);
+    //     }
+    //   }
+    //   setFuturePredictions(newPredictions);
+    // };
   
-    fetchAllFuturePredictions();
+    //fetchAllFuturePredictions();
   }, [trackedSymbols]); // Add trackedSymbols as a dependency if you want to refetch when it changes
 
-  //
+  
 
   return (
     <div className="App container">
@@ -544,38 +544,7 @@ const handlePrediction = async () => {
         </div>
 
 
-        <div className="widget">
-         <h2>Future Price Predictions (4 weeks)</h2>
-          <p>Predictions for all tracked symbols over the next 4 weeks.</p>
-         {futurePredictionsError && <p className="error-message">{futurePredictionsError}</p>}
-          <div className="future-predictions">
-           {Object.entries(futurePredictions).map(([sym, predictions]) => (
-               <div key={sym} className="prediction-item">
-               <h3>{sym}</h3>
-               <table className="predictions-table">
-               <thead>
-                 <tr>
-                     <th>Date</th>
-                     <th>Price</th>
-                     <th>Action</th>
-                 </tr>
-                </thead>
-                <tbody>
-                 {Array.isArray(predictions) && predictions.map((pred, index) => (
-                   <tr key={index}>
-                   <td>{pred.date}</td>
-                    <td>${pred.predicted_close.toFixed(2)}</td>
-                     <td style={{
-                      color: pred.action === 'buy' ? 'green' : pred.action === 'sell' ? 'red' : 'black'
-                       }}>{pred.action.toUpperCase()}</td>
-                   </tr>
-                  ))}
-               </tbody>
-              </table>
-             </div>
-             ))}
-          </div>
-         </div>
+  
         <div className="widget">
           <h2>Recent Activities</h2>
           <div className="recent-activities">
