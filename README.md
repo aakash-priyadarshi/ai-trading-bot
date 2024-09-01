@@ -1,5 +1,6 @@
 # AI Trading Bot - Frontend and Backend
 
+
 <p align="center">
   <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/stargazers"><img src="https://img.shields.io/github/stars/aakash-priyadarshi/ai-trading-bot" alt="Stars Badge"/></a>
   <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/network/members"><img src="https://img.shields.io/github/forks/aakash-priyadarshi/ai-trading-bot" alt="Forks Badge"/></a>
@@ -10,12 +11,12 @@
 </p>
 
 <p align="center">
-  <!-- Replace this comment with your actual demo GIF -->
-   <img src="trading-bot.webp" alt="AI Trading Bot Demo" width="200"/>
-  <!-- If you don't have a demo GIF yet, you can use a placeholder image -->
+  <img src="trading-bot.webp" alt="AI Trading Bot Demo" width="200"/>
 </p>
 
 This repository contains the frontend and backend components of the AI Trading Bot project. The system provides real-time stock market data visualization, automated trading capabilities, and integration with machine learning predictions.
+
+> **Note**: The AI Trading Bot logo and demo images used in this README are AI-generated and the exclusive property of Aakash Priyadarshi. These images may not be used, reproduced, or distributed without explicit permission from the owner.
 
 ## 🔗 Related Repositories
 
@@ -182,3 +183,9 @@ For any queries or suggestions, feel free to reach out:
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+### Image Usage Rights
+
+The AI-generated images used in this project, including the AI Trading Bot logo and demo images, are the exclusive property of Aakash Priyadarshi. These images are protected by copyright and may not be used, reproduced, modified, or distributed without explicit written permission from the owner.
+
+For inquiries about using these images, please contact Aakash Priyadarshi through the provided Linktree contact link.
