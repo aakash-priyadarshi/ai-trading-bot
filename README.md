@@ -11,9 +11,8 @@
 
 <p align="center">
   <!-- Replace this comment with your actual demo GIF -->
-   <img src="trading-bot.webp" alt="AI Trading Bot Demo" width="600"/>
+   <img src="trading-bot.webp" alt="AI Trading Bot Demo" width="200"/>
   <!-- If you don't have a demo GIF yet, you can use a placeholder image -->
-  <img src="https://via.placeholder.com/600x400?text=AI+Trading+Bot+Demo" alt="AI Trading Bot Demo" width="600"/>
 </p>
 
 This repository contains the frontend and backend components of the AI Trading Bot project. The system provides real-time stock market data visualization, automated trading capabilities, and integration with machine learning predictions.
