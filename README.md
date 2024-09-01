@@ -184,7 +184,7 @@ For any queries or suggestions, feel free to reach out:
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-## 🖼️©️ Image Usage Rights
+## ©️🖼️ Image Usage Rights
 
 The AI-generated images used in this project, including the AI Trading Bot logo and demo images, are the exclusive property of Aakash Priyadarshi. These images are protected by copyright and may not be used, reproduced, modified, or distributed without explicit written permission from the owner.
 
