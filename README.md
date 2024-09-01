@@ -1,7 +1,10 @@
 # AI Trading Bot - Frontend and Backend
 
 <p align="center">
-  <img src="https://your-image-hosting-service.com/ai-trading-bot-logo.png" alt="AI Trading Bot Logo" width="200"/>
+  <!-- Replace this comment with your actual logo -->
+  <!-- <img src="path_to_your_logo.png" alt="AI Trading Bot Logo" width="200"/> -->
+  <!-- If you don't have a logo yet, you can use an emoji as a placeholder -->
+  <span style="font-size: 100px;">📈</span>
 </p>
 
 <p align="center">
@@ -14,7 +17,10 @@
 </p>
 
 <p align="center">
-  <img src="https://your-image-hosting-service.com/ai-trading-bot-demo.gif" alt="AI Trading Bot Demo" width="600"/>
+  <!-- Replace this comment with your actual demo GIF -->
+  <!-- <img src="path_to_your_demo.gif" alt="AI Trading Bot Demo" width="600"/> -->
+  <!-- If you don't have a demo GIF yet, you can use a placeholder image -->
+  <img src="https://via.placeholder.com/600x400?text=AI+Trading+Bot+Demo" alt="AI Trading Bot Demo" width="600"/>
 </p>
 
 This repository contains the frontend and backend components of the AI Trading Bot project. The system provides real-time stock market data visualization, automated trading capabilities, and integration with machine learning predictions.
@@ -35,10 +41,15 @@ For a complete setup of the AI Trading Bot, you'll need to clone and configure b
 ## ✨ Features
 
 - Real-time stock chart visualization using Chart.js
-- Support for multiple timeframes and chart types
+- Support for multiple timeframes (1Min, 5Min, 15Min, 30Min, 1Hour, 4Hour, 1D, 1W, 1M)
+- Candlestick and line chart types
 - WebSocket integration for live data updates
-- Manual and automated trading functionalities
+- Manual trading functionality with buy/sell options
+- Automated trading with customizable frequency
 - Integration with external ML prediction service
+- Account balance tracking
+- Recent trading activity log
+- Future price predictions display
 
 ## 🛠️ Tech Stack
 
@@ -48,11 +59,117 @@ For a complete setup of the AI Trading Bot, you'll need to clone and configure b
   <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js"/>
   <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
   <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js"/>
+  <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white" alt="Socket.io"/>
 </p>
+
+## 📋 Prerequisites
+
+- Node.js (v14 or later)
+- MongoDB
+- Alpaca API credentials
 
 ## 🚀 Setup
 
-(Setup instructions remain the same as in the previous version)
+1. Clone the repository:
+   ```
+   git clone https://github.com/aakash-priyadarshi/ai-trading-bot.git
+   cd ai-trading-bot
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add the following:
+   ```
+   ALPACA_API_KEY=your_alpaca_api_key
+   ALPACA_SECRET_KEY=your_alpaca_secret_key
+   MONGO_URI=your_mongodb_connection_string
+   ML_SERVICE_URL=url_of_your_ml_service
+   ```
+
+4. Start the backend server:
+   ```
+   npm run start:server
+   ```
+
+5. In a new terminal, start the frontend development server:
+   ```
+   npm run start:client
+   ```
+
+6. Open your browser and navigate to `http://localhost:3000` to view the application.
+
+## 📁 Project Structure
+
+```
+webapp/
+├── backend/
+│   ├── controllers/
+│   │   └── tradingController.js
+│   ├── models/
+│   │   └── StockData.js
+│   ├── routes/
+│   │   └── data.js
+│   ├── services/
+│   │   ├── alpacaTrader.js
+│   │   ├── autoTrader.js
+│   │   ├── fetchHistoricalData.js
+│   │   ├── fetchRealTimeData.js
+│   │   └── mlService.js
+│   ├── utils/
+│   │   └── symbolFormatter.js
+│   ├── app.js
+│   └── .env
+├── frontend/
+│   ├── public/
+│   │   ├── index.html
+│   │   └── index.css
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── App.js
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   ├── styles/
+│   │   │   └── index.css
+│   │   └── index.js
+│   ├── .env
+│   └── package.json
+├── .env
+├── package.json
+└── README.md
+```
+
+## 🔄 API Endpoints
+
+- `/api/v1/data/:symbol/:timeframe`: Get stock data for a specific symbol and timeframe
+- `/api/v1/trading/manual`: Execute a manual trade
+- `/api/v1/trading/toggle`: Toggle auto-trading on/off
+- `/api/v1/trading/frequency`: Set auto-trading frequency
+- `/api/v1/trading/predict`: Get future price predictions
+
+## 📊 Data Visualization
+
+The frontend uses Chart.js to visualize stock data. It supports:
+- Candlestick and line chart types
+- Multiple timeframes from 1 minute to 1 month
+- Real-time updates for intraday data
+- Zoom and pan functionality
+
+## 🤖 Automated Trading
+
+The system includes an automated trading feature that can:
+- Execute trades based on predefined strategies
+- Adjust trading frequency (e.g., daily, every 4 hours, hourly)
+- Integrate predictions from the ML service for decision making
+
+## 🔗 Integration with ML Service
+
+The backend communicates with the ML service to get price predictions. These predictions are used for:
+- Displaying future price estimates to users
+- Informing automated trading decisions
 
 ## 🤝 Contributing
 
