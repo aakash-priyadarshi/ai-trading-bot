@@ -2,7 +2,7 @@
 
 <p align="center">
   <!-- Replace this comment with your actual logo -->
-  <!-- <img src="path_to_your_logo.png" alt="AI Trading Bot Logo" width="200"/> -->
+  <!-- <img src="trading-bot.webp" alt="AI Trading Bot Logo" width="200"/> -->
   <!-- If you don't have a logo yet, you can use an emoji as a placeholder -->
   <span style="font-size: 100px;">📈</span>
 </p>
