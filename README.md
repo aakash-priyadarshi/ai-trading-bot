@@ -2,6 +2,19 @@
 
 This repository contains the frontend and backend components of the AI Trading Bot project. The system provides real-time stock market data visualization, automated trading capabilities, and integration with machine learning predictions.
 
+## Related Repositories
+
+This project is split into two main components:
+
+1. **Frontend and Backend (Current Repository)**: 
+   Contains the user interface, data visualization, and trading logic.
+   
+2. **Machine Learning Model**: 
+   Houses the predictive model and data preparation scripts.
+   GitHub Repository: [Trading-bot-model](https://github.com/aakash-priyadarshi/Trading-bot-model)
+
+For a complete setup of the AI Trading Bot, you'll need to clone and configure both repositories.
+
 ## Features
 
 - Real-time stock chart visualization using Chart.js
@@ -22,13 +35,14 @@ This repository contains the frontend and backend components of the AI Trading B
 - Node.js (v14 or later)
 - MongoDB
 - Alpaca API credentials
+- Access to the Machine Learning service (see [Trading-bot-model](https://github.com/aakash-priyadarshi/Trading-bot-model) repository)
 
 ## Setup
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/ai-trading-bot-nodejs.git
-   cd ai-trading-bot-nodejs
+   git clone https://github.com/aakash-priyadarshi/ai-trading-bot.git
+   cd ai-trading-bot
    ```
 
 2. Install dependencies:
@@ -42,6 +56,7 @@ This repository contains the frontend and backend components of the AI Trading B
    ALPACA_API_KEY=your_alpaca_api_key
    ALPACA_SECRET_KEY=your_alpaca_secret_key
    MONGO_URI=your_mongodb_connection_string
+   ML_SERVICE_URL=url_of_your_ml_service
    ```
 
 4. Start the backend server:
