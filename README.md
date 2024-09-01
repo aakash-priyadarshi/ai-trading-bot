@@ -1,13 +1,6 @@
 # AI Trading Bot - Frontend and Backend
 
 <p align="center">
-  <!-- Replace this comment with your actual logo -->
-  <img src="trading-bot.webp" alt="AI Trading Bot Logo" width="200"/>
-  <!-- If you don't have a logo yet, you can use an emoji as a placeholder -->
-  <span style="font-size: 100px;">📈</span>
-</p>
-
-<p align="center">
   <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/stargazers"><img src="https://img.shields.io/github/stars/aakash-priyadarshi/ai-trading-bot" alt="Stars Badge"/></a>
   <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/network/members"><img src="https://img.shields.io/github/forks/aakash-priyadarshi/ai-trading-bot" alt="Forks Badge"/></a>
   <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/pulls"><img src="https://img.shields.io/github/issues-pr/aakash-priyadarshi/ai-trading-bot" alt="Pull Requests Badge"/></a>
@@ -18,7 +11,7 @@
 
 <p align="center">
   <!-- Replace this comment with your actual demo GIF -->
-  <!-- <img src="path_to_your_demo.gif" alt="AI Trading Bot Demo" width="600"/> -->
+   <img src="trading-bot.webp" alt="AI Trading Bot Demo" width="600"/>
   <!-- If you don't have a demo GIF yet, you can use a placeholder image -->
   <img src="https://via.placeholder.com/600x400?text=AI+Trading+Bot+Demo" alt="AI Trading Bot Demo" width="600"/>
 </p>
