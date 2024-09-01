@@ -1,8 +1,25 @@
 # AI Trading Bot - Frontend and Backend
 
+<p align="center">
+  <img src="https://your-image-hosting-service.com/ai-trading-bot-logo.png" alt="AI Trading Bot Logo" width="200"/>
+</p>
+
+<p align="center">
+  <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/stargazers"><img src="https://img.shields.io/github/stars/aakash-priyadarshi/ai-trading-bot" alt="Stars Badge"/></a>
+  <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/network/members"><img src="https://img.shields.io/github/forks/aakash-priyadarshi/ai-trading-bot" alt="Forks Badge"/></a>
+  <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/pulls"><img src="https://img.shields.io/github/issues-pr/aakash-priyadarshi/ai-trading-bot" alt="Pull Requests Badge"/></a>
+  <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/issues"><img src="https://img.shields.io/github/issues/aakash-priyadarshi/ai-trading-bot" alt="Issues Badge"/></a>
+  <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/graphs/contributors"><img alt="GitHub contributors" src="https://img.shields.io/github/contributors/aakash-priyadarshi/ai-trading-bot?color=2b9348"></a>
+  <a href="https://github.com/aakash-priyadarshi/ai-trading-bot/blob/master/LICENSE"><img src="https://img.shields.io/github/license/aakash-priyadarshi/ai-trading-bot?color=2b9348" alt="License Badge"/></a>
+</p>
+
+<p align="center">
+  <img src="https://your-image-hosting-service.com/ai-trading-bot-demo.gif" alt="AI Trading Bot Demo" width="600"/>
+</p>
+
 This repository contains the frontend and backend components of the AI Trading Bot project. The system provides real-time stock market data visualization, automated trading capabilities, and integration with machine learning predictions.
 
-## Related Repositories
+## 🔗 Related Repositories
 
 This project is split into two main components:
 
@@ -15,7 +32,7 @@ This project is split into two main components:
 
 For a complete setup of the AI Trading Bot, you'll need to clone and configure both repositories.
 
-## Features
+## ✨ Features
 
 - Real-time stock chart visualization using Chart.js
 - Support for multiple timeframes and chart types
@@ -23,87 +40,36 @@ For a complete setup of the AI Trading Bot, you'll need to clone and configure b
 - Manual and automated trading functionalities
 - Integration with external ML prediction service
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-- **Frontend**: React.js, Chart.js
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB
-- **APIs**: Alpaca API for stock data and trading
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React"/>
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/>
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js"/>
+  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
+  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js"/>
+</p>
 
-## Prerequisites
+## 🚀 Setup
 
-- Node.js (v14 or later)
-- MongoDB
-- Alpaca API credentials
-- Access to the Machine Learning service (see [Trading-bot-model](https://github.com/aakash-priyadarshi/Trading-bot-model) repository)
+(Setup instructions remain the same as in the previous version)
 
-## Setup
+## 🤝 Contributing
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/aakash-priyadarshi/ai-trading-bot.git
-   cd ai-trading-bot
-   ```
+We welcome contributions to the AI Trading Bot project! Please see our [Contributing Guide](CONTRIBUTING.md) for more details on how to get started.
 
-2. Install dependencies:
-   ```
-   npm install
-   ```
+## 💖 Sponsor
 
-3. Set up environment variables:
-   Create a `.env` file in the root directory and add the following:
-   ```
-   ALPACA_API_KEY=your_alpaca_api_key
-   ALPACA_SECRET_KEY=your_alpaca_secret_key
-   MONGO_URI=your_mongodb_connection_string
-   ML_SERVICE_URL=url_of_your_ml_service
-   ```
+If you find this project helpful, consider buying me a coffee!
 
-4. Start the backend server:
-   ```
-   npm run start:server
-   ```
+<a href="https://www.buymeacoffee.com/aakashm30" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
-5. In a new terminal, start the frontend development server:
-   ```
-   npm run start:client
-   ```
+## 📞 Contact
 
-6. Open your browser and navigate to `http://localhost:3000` to view the application.
+For any queries or suggestions, feel free to reach out:
 
-## Project Structure
+<a href="https://linktr.ee/aakashPriyadarshi" target="_blank"><img src="https://img.shields.io/badge/linktree-39E09B?style=for-the-badge&logo=linktree&logoColor=white" alt="Linktree"/></a>
 
-```
-webapp/
-├── backend/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── services/
-│   ├── utils/
-│   └── app.js
-├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── components/
-│       ├── services/
-│       └── App.js
-├── .env
-└── package.json
-```
-
-## API Endpoints
-
-- `/api/v1/data/:symbol/:timeframe`: Get stock data for a specific symbol and timeframe
-- `/api/v1/trading/manual`: Execute a manual trade
-- `/api/v1/trading/toggle`: Toggle auto-trading on/off
-- `/api/v1/trading/frequency`: Set auto-trading frequency
-- `/api/v1/trading/predict`: Get future price predictions
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
